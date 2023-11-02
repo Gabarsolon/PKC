@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+//For Lab-3: problem no.1
+
 char* encrypt(char text[], int* key, int m) {
     int textLength = strlen(text);
     int extendedTextLength = textLength;
