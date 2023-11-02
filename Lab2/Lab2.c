@@ -4,7 +4,11 @@
 
 //For Lab-3: problem no.1
 
+//Problem 3: Permutation Cipher
 char* encrypt(char text[], int* key, int m) {
+    for (int i = 0; i < m; i++)
+        key[i]--;
+
     int textLength = strlen(text);
     int extendedTextLength = textLength;
 
@@ -17,7 +21,7 @@ char* encrypt(char text[], int* key, int m) {
 
     strcpy(extendedText, text);
 
-    //fill the black spaces with underscore
+    //fill the blank spaces with underscore
     for (int i = textLength; i < extendedTextLength; i++) {
         extendedText[i] = '_';
     }
@@ -47,9 +51,9 @@ char* encrypt(char text[], int* key, int m) {
 
 int main() {
     //                   0  1  2  3  4
-    int key[] =         {1, 3, 4, 2, 0};
+    int key[] =         {2, 4, 5, 3, 1};
     //                   0  1  2  3  4
-    int reversedKey[] = {4, 0, 3, 1, 2};
+    int reversedKey[] = {5, 1, 4, 2, 3};
 
     //the length of the key
     int m = 5;
@@ -63,7 +67,7 @@ int main() {
     printf("The encryptext text is: %s\n", encryptedText);
 
     char* decryptedText = encrypt(encryptedText, reversedKey, m);
-    printf("The decrypted text is:  %s", encrypt(encryptedText, reversedKey, m));
+    printf("The decrypted text is:  %s", decryptedText);
 
     free(encryptedText);
     free(decryptedText);
