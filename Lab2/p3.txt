@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 //For Lab-3: problem no.1
-//For Lab-4: problem no.1
 
 //Problem 3: Permutation Cipher
 char* encrypt(char text[], int* key, int m) {

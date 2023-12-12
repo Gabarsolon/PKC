@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Turcu/Documents/GitHub/PKC/AssignmentA",
-      "program": "c:/Users/Turcu/Documents/GitHub/PKC/AssignmentA/build/Debug/outDebug",
+      "cwd": "c:/Users/Turcu/Documents/GitHub/PKC/Lab2",
+      "program": "c:/Users/Turcu/Documents/GitHub/PKC/Lab2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
