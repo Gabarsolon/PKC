@@ -1,12 +1,13 @@
 
 #include <stdio.h>
+#include <math.h>
 
 #define false 0
 #define true 1
 
 // Utility function to do modular exponentiation.
 // It returns (x^y) % p
-int power(int x, unsigned int y, int p)
+int modularExponentiation(int x, unsigned int y, int p)
 {
 	int res = 1;	 // Initialize result
 	x = x % p; // Update x if it is more than or
@@ -24,35 +25,24 @@ int power(int x, unsigned int y, int p)
 	return res;
 }
 
-// This function is called for all k trials. It returns
-// false if n is composite and returns true if n is
-// probably prime.
-// d is an odd number such that d*2 = n-1
-// for some r >= 1
 int miillerTest(int n, int a, int s, int t)
 {
-	// Compute a^t % n
-	int x = power(a, t, n);
-
-	if (x == 1 || x == n - 1)
+	//check if a^t = 1
+	int x = modularExponentiation(a, pow(2, 0) * t, n);
+	printf("For j=0: %d\n", x);
+	if (x == 1)
 		return true;
 
-	// Keep squaring x while one of the following doesn't
-	// happen
-	// (i) d does not reach n-1
-	// (ii) (x^2) % n is not 1
-	// (iii) (x^2) % n is not n-1
-	int j = 0;
-	while (t != n - 1)
-	{
-		x = (x * x) % n;
-		t *= power(s, j, n);
-
-		if (x == 1)	 return false;
-		if (x == n - 1) return true;
+	int prevX = x;
+	for (int j = 1; j <= s; j ++) {
+		//check if a^(2^j)*t = 1
+		x = modularExponentiation(a, pow(2, j) * t, n);
+		printf("For j=%d: %d\n", j, x);
+		if (x == 1 && prevX == n-1)
+			return true;
+		prevX = n - 1;
 	}
 
-	// Return composite
 	return false;
 }
 
@@ -62,9 +52,7 @@ int miillerTest(int n, int a, int s, int t)
 int isPrime(int n, int k)
 {
 	// Corner cases
-	if (n < 2)
-		return false;
-	if (n == 2)
+	if (n == 2 || n == 3 || n == 5)
 		return true;
 	if (n % 2 == 0)
 		return false;
@@ -83,17 +71,24 @@ int isPrime(int n, int k)
 	printf("t = %d\n", t);
 
 	// Iterate given number of 'k' times
+
 	int a = 2;
-	int lastResult = 0;
-	for (int i = 0; i < k; i++) {
+	printf("------------------------------------\n");
+	printf("Iteration k=%d for a=%d\n", 1, a);
+	if (!miillerTest(n, a, s, t))
+		return false;
+	a = 3;
+
+	for (int i = 1; i < k; i++) {
 		printf("------------------------------------\n");
 		printf("Iteration k=%d for a=%d\n", i + 1, a);
-		lastResult = miillerTest(n, a, s, t);
-		a++;
+		if (!miillerTest(n, a, s, t))
+			return false;
+		a += 2;
 	}
 	printf("----------------------------------\n");
 
-	return lastResult;
+	return true;
 }
 
 // Driver program
@@ -102,14 +97,18 @@ int main()
 	int k = 3; // Number of iterations
 	int n;
 
+	//for (int i = 2; i < 100; i++)
+	//	if (isPrime(i, k))
+	//		printf("\n\n\n\n\%d\n\n\n\n", i);
+
 	printf("Input n: ");
 	scanf("%d", &n);
 	
 
 	if (isPrime(n, k))
-		printf("%d IS PRIME", n);
+		printf("%d IS PRIME WITH PROBABILITY: %f\n", n, 1 - 1 / pow(4, k));
 	else
-		printf("%d IS COMPOSITE", n);
+		printf("%d IS COMPOSITE\n", n);
 		
 	return 0;
 }
