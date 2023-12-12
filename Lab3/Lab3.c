@@ -40,8 +40,12 @@ int miillerTest(BIG_NUMBER n, BIG_NUMBER a, BIG_NUMBER s, BIG_NUMBER t)
 		//check if a^(2^j)*t = 1
 		x = modularExponentiation(a, pow(2, j) * t, n);
 		printf("For j=%I64u: %I64u\n", j, x);
-		if (x == 1 && prevX == n-1)
-			return true;
+		if (x == 1) {
+			if (prevX == n - 1)
+				return true;
+			else
+				return false;
+		}
 		prevX = n - 1;
 	}
 
