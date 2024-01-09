@@ -62,44 +62,35 @@ def repeatedSquaringModularExponentiation(base, exponent, modulus):
     return remainder
 
 
-def millerTest(n, a, s, t):
-    x = repeatedSquaringModularExponentiation(a, t, n)
-
-    if x == 1:
-        return True
-
-    prevX = x
-    for j in range(1, s + 1):
-        x = repeatedSquaringModularExponentiation(a, 2 ** j * t, n)
-        if x == 1:
-            if prevX == n - 1:
-                return True
-            else:
-                return False
-        prevX = x
-
-    return False
-
-
 def isMillerRabinPassed(n):
     '''Run 20 iterations of Rabin Miller Primality test'''
-    k = 3
+    maxDivisionsByTwo = 0
+    ec = n - 1
+    while ec % 2 == 0:
+        ec >>= 1
+        maxDivisionsByTwo += 1
+    assert (2 ** maxDivisionsByTwo * ec == n - 1)
 
-    # Find s and t such that n - 1 = 2 ^ s * t
-    s = 0
-    t = n - 1
-    while t % 2 == 0:
-        s += 1
-        t = t / 2
-
-    a = 2
-    if millerTest(n, a, s, t) is False:
-        return False
-
-    a = 3
-    for i in range(1, k):
-        if millerTest(n, a, s, t) is False:
+    def trialComposite(round_tester):
+        if pow(round_tester, ec, n) == 1:
             return False
-        a += 2
+        for i in range(maxDivisionsByTwo):
+            if pow(round_tester, 2 ** i * ec, n) == n - 1:
+                return False
+        return True
 
+    # Set number of trials here
+    numberOfRabinTrials = 20
+    for i in range(numberOfRabinTrials):
+        round_tester = random.randrange(2, n)
+        if trialComposite(round_tester):
+            return False
     return True
+
+
+def generate_random_prime(number_of_bits):
+    while True:
+        candidate = getLowLevelPrime(number_of_bits)
+        if isMillerRabinPassed(candidate) is False:
+            continue
+        return candidate
