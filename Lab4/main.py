@@ -1,3 +1,4 @@
-import utils
+from rsa import RSA
 
-print(utils.string_to_numerical_equivalent("a_"))
+rsa = RSA()
+print(rsa.encrypt("algebra"))

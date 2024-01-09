@@ -2,11 +2,6 @@ import random
 
 ASCII_CODE_OF_A = 65
 
-
-def letter_to_numerical_equivalent(letter):
-    return 0 if letter == '_' else ord(letter.upper()) - ASCII_CODE_OF_A + 1
-
-
 # Pre generated primes
 first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                      31, 37, 41, 43, 47, 53, 59, 61, 67,
@@ -111,6 +106,14 @@ def random_natural_number_smaller_and_coprime_with_another_number(n):
             return e
 
 
+def letter_to_numerical_equivalent(letter):
+    return 0 if letter == '_' else ord(letter.upper()) - ASCII_CODE_OF_A + 1
+
+
+def numerical_equivalent_to_letter(n):
+    return '_' if n == 0 else chr(ASCII_CODE_OF_A + n - 1).upper()
+
+
 def string_to_numerical_equivalent(text):
     p = 1
     result = 0
@@ -118,3 +121,11 @@ def string_to_numerical_equivalent(text):
         result += letter_to_numerical_equivalent(letter) * p
         p *= 27
     return result
+
+
+def numerical_equivalent_to_string(n, l):
+    string_equivalent = ""
+    for i in range(0, l):
+        string_equivalent = numerical_equivalent_to_letter(n % 27) + string_equivalent
+        n = n // 27
+    return string_equivalent
