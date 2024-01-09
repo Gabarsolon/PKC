@@ -1,7 +1,3 @@
 import utils
 
-p = utils.generate_random_prime(1024)
-q = utils.generate_random_prime(1024)
-print(p)
-print(q)
-print(p * q)
+print(utils.string_to_numerical_equivalent("a_"))

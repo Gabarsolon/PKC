@@ -4,7 +4,7 @@ ASCII_CODE_OF_A = 65
 
 
 def letter_to_numerical_equivalent(letter):
-    return 0 if letter == '_' else letter.upper() - ASCII_CODE_OF_A + 1
+    return 0 if letter == '_' else ord(letter.upper()) - ASCII_CODE_OF_A + 1
 
 
 # Pre generated primes
@@ -94,3 +94,27 @@ def generate_random_prime(number_of_bits):
         if isMillerRabinPassed(candidate) is False:
             continue
         return candidate
+
+
+def euclid(a, b):
+    while b != 0:
+        r = a % b
+        a = b
+        b = r
+    return a
+
+
+def random_natural_number_smaller_and_coprime_with_another_number(n):
+    while True:
+        e = random.randrange(2, n)
+        if euclid(e, n) == 1:
+            return e
+
+
+def string_to_numerical_equivalent(text):
+    p = 1
+    result = 0
+    for letter in reversed([*text]):
+        result += letter_to_numerical_equivalent(letter) * p
+        p *= 27
+    return result
