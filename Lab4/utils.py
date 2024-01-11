@@ -1,5 +1,5 @@
 import random
-
+import math
 ASCII_CODE_OF_A = 65
 
 # Pre generated primes
@@ -129,3 +129,58 @@ def numerical_equivalent_to_string(n, l):
         string_equivalent = numerical_equivalent_to_letter(n % 27) + string_equivalent
         n = n // 27
     return string_equivalent
+
+
+def gcd_extended(a, b):
+	""" Calculates the gcd and Bezout coefficients, 
+	using the Extended Euclidean Algorithm (non-recursive).
+	"""
+	#Set default values for the quotient, remainder, 
+	#s-variables and t-variables
+	q = 0
+	r = 1
+	s1 = 1 
+	s2 = 0
+	s3 = 1 
+	t1 = 0 
+	t2 = 1
+	t3 = 0
+	
+	'''
+	In each iteration of the loop below, we
+	calculate the new quotient, remainder, a, b,
+	and the new s-variables and t-variables.
+	r decreases, so we stop when r = 0
+	'''
+	while(r > 0):
+		#The calculations
+		q = math.floor(a/b)
+		r = a - q * b
+		s3 = s1 - q * s2
+		t3 = t1 - q * t2
+		
+		'''
+		The values for the next iteration, 
+		(but only if there is a next iteration)
+		'''
+		if(r > 0):
+			a = b
+			b = r
+			s1 = s2
+			s2 = s3
+			t1 = t2
+			t2 = t3
+
+	return abs(b), s2, t2
+ 
+
+def multinv(e, phi):   
+   #Get the gcd and the second Bezout coefficient (t)
+   #from the Extended Euclidean Algorithm. (We don't need s)
+   my_gcd, _, t = gcd_extended(phi, e)
+   
+   #It only has a multiplicative inverse if the gcd is 1
+   if(my_gcd == 1):
+      return t % phi
+   else:
+      raise ValueError('{} has no multiplicative inverse modulo {}'.format(e, phi))

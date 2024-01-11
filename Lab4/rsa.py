@@ -18,9 +18,10 @@ class RSA:
         # ciphertext block size
         self.l = self.k + 1
 
-        # TODO: Compute private key
-
         self.public_key = (self.n, self.e)
+
+        self.private_key=(utils.multinv(self.e,self.phi))
+
 
     def encrypt(self, plaintext):
         # split the text and write the numerical equivalents
@@ -51,3 +52,31 @@ class RSA:
             ciphertext += utils.numerical_equivalent_to_string(encrypted_numerical_equivalent, self.l)
 
         return ciphertext
+
+
+    def decrypt(self, ciphertext):
+    # Split the ciphertext into blocks of size self.l
+        ciphertext_blocks = []
+        for i in range(0, len(ciphertext), self.l):
+            block = ciphertext[i:i + self.l]
+            ciphertext_blocks.append(block)
+
+    # Convert each block back to numerical equivalents
+        numerical_equivalents = []
+        for block in ciphertext_blocks:
+            numerical_equivalent = utils.string_to_numerical_equivalent(block)
+            numerical_equivalents.append(numerical_equivalent)
+
+    # Decrypt c^d mod n for each block
+        decrypted_numerical_equivalents = []
+        for numerical_equivalent in numerical_equivalents:
+            decrypted_numerical_equivalent = utils.repeatedSquaringModularExponentiation(numerical_equivalent, self.private_key, self.n)
+            decrypted_numerical_equivalents.append(decrypted_numerical_equivalent)
+
+    # Convert the numerical equivalents back to the original message
+        decrypted_message = ""
+        for num in decrypted_numerical_equivalents:
+            decrypted_message += utils.numerical_equivalent_to_string(num, self.k)
+
+        return decrypted_message.rstrip('_')  # Remove trailing underscores added during encryption
+
