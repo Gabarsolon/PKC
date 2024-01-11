@@ -1,9 +1,13 @@
 from rsa import RSA
 
+print("Generating RSA keys....")
 rsa = RSA()
-plaintext = "HELLO_WORLD"
-ciphertext = rsa.encrypt(plaintext)
-decrypted_message = rsa.decrypt(ciphertext)
-print("Original message:", plaintext)
-print("Ciphertext:", ciphertext)
-print("Decrypted message:", decrypted_message)
+print("RSA keys generated successfully")
+print("------------------------------------------")
+
+while True:
+    text = input("Input a text: ")
+    encrypted_message = rsa.encrypt(text)
+    print("Encrypted text: " + encrypted_message)
+    print("Decrypted text: " + rsa.decrypt(encrypted_message))
+    print("-----------------------------------------")
