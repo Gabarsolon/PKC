@@ -122,7 +122,7 @@ def random_natural_number_smaller_and_coprime_with_another_number(n):
 
 
 def letter_to_numerical_equivalent(letter):
-    return 0 if letter == '_' else ord(letter.upper()) - ASCII_CODE_OF_A + 1
+    return 0 if letter == '_' or letter == ' ' else ord(letter.upper()) - ASCII_CODE_OF_A + 1
 
 
 def numerical_equivalent_to_letter(n):
@@ -147,16 +147,46 @@ def numerical_equivalent_to_string(n, l):
 
 
 def gcd_extended(a, b):
-    """ Calculates the gcd and Bezout coefficients using the Extended Euclidean Algorithm. """
-    s, t, u, v = 1, 0, 0, 1  # Initialize variables
+    """ Calculates the gcd and Bezout coefficients,
+    using the Extended Euclidean Algorithm (non-recursive).
+    """
+    # Set default values for the quotient, remainder,
+    # s-variables and t-variables
+    q = 0
+    r = 1
+    s1 = 1
+    s2 = 0
+    s3 = 1
+    t1 = 0
+    t2 = 1
+    t3 = 0
 
-    while b>0:
-        q = a // b  # Quotient
-        a, b = b, a % b  # Update a and b
-        s, u = u, s - q * u  # Update s
-        t, v = v, t - q * v  # Update t
+    '''
+    In each iteration of the loop below, we
+    calculate the new quotient, remainder, a, b,
+    and the new s-variables and t-variables.
+    r decreases, so we stop when r = 0
+    '''
+    while (r > 0):
+        # The calculations
+        q = math.floor(a / b)
+        r = a - q * b
+        s3 = s1 - q * s2
+        t3 = t1 - q * t2
 
-    return abs(a), s, t
+        '''
+        The values for the next iteration, 
+        (but only if there is a next iteration)
+        '''
+        if (r > 0):
+            a = b
+            b = r
+            s1 = s2
+            s2 = s3
+            t1 = t2
+            t2 = t3
+
+    return abs(b), s2, t2
 
 
 def multinv(e, phi):
