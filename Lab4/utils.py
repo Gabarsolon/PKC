@@ -1,5 +1,6 @@
 import random
 import math
+
 ASCII_CODE_OF_A = 65
 
 # Pre generated primes
@@ -57,29 +58,43 @@ def repeatedSquaringModularExponentiation(base, exponent, modulus):
     return remainder
 
 
-def isMillerRabinPassed(n):
-    '''Run 20 iterations of Rabin Miller Primality test'''
-    maxDivisionsByTwo = 0
-    ec = n - 1
-    while ec % 2 == 0:
-        ec >>= 1
-        maxDivisionsByTwo += 1
-    assert (2 ** maxDivisionsByTwo * ec == n - 1)
-
-    def trialComposite(round_tester):
-        if pow(round_tester, ec, n) == 1:
-            return False
-        for i in range(maxDivisionsByTwo):
-            if pow(round_tester, 2 ** i * ec, n) == n - 1:
-                return False
+def miller_test(n, a, s, t):
+    x = repeatedSquaringModularExponentiation(a, t, n)
+    if x == 1:
         return True
 
-    # Set number of trials here
-    numberOfRabinTrials = 20
-    for i in range(numberOfRabinTrials):
-        round_tester = random.randrange(2, n)
-        if trialComposite(round_tester):
+    prev_x = x
+    for j in range(1, s + 1):
+        x = repeatedSquaringModularExponentiation(a, 2 ** j * t, n)
+        if x == 1:
+            if prev_x == n - 1:
+                return True
             return False
+        prev_x = x
+
+    return False
+
+
+def isMillerRabinPassed(n):
+    '''Run 20 iterations of Rabin Miller Primality test'''
+    k = 20
+
+    s = 0
+    t = n - 1
+    while t % 2 == 0:
+        s += 1
+        t = t // 2
+
+    a = 2
+    if miller_test(n, a, s, t) is False:
+        return False
+
+    a = 3
+    for i in range(1, k):
+        if miller_test(n, a, s, t) is False:
+            return False
+        a += 2
+
     return True
 
 
@@ -132,55 +147,55 @@ def numerical_equivalent_to_string(n, l):
 
 
 def gcd_extended(a, b):
-	""" Calculates the gcd and Bezout coefficients, 
-	using the Extended Euclidean Algorithm (non-recursive).
-	"""
-	#Set default values for the quotient, remainder, 
-	#s-variables and t-variables
-	q = 0
-	r = 1
-	s1 = 1 
-	s2 = 0
-	s3 = 1 
-	t1 = 0 
-	t2 = 1
-	t3 = 0
-	
-	'''
-	In each iteration of the loop below, we
-	calculate the new quotient, remainder, a, b,
-	and the new s-variables and t-variables.
-	r decreases, so we stop when r = 0
-	'''
-	while(r > 0):
-		#The calculations
-		q = math.floor(a/b)
-		r = a - q * b
-		s3 = s1 - q * s2
-		t3 = t1 - q * t2
-		
-		'''
-		The values for the next iteration, 
-		(but only if there is a next iteration)
-		'''
-		if(r > 0):
-			a = b
-			b = r
-			s1 = s2
-			s2 = s3
-			t1 = t2
-			t2 = t3
+    """ Calculates the gcd and Bezout coefficients,
+    using the Extended Euclidean Algorithm (non-recursive).
+    """
+    # Set default values for the quotient, remainder,
+    # s-variables and t-variables
+    q = 0
+    r = 1
+    s1 = 1
+    s2 = 0
+    s3 = 1
+    t1 = 0
+    t2 = 1
+    t3 = 0
 
-	return abs(b), s2, t2
- 
+    '''
+    In each iteration of the loop below, we
+    calculate the new quotient, remainder, a, b,
+    and the new s-variables and t-variables.
+    r decreases, so we stop when r = 0
+    '''
+    while (r > 0):
+        # The calculations
+        q = math.floor(a / b)
+        r = a - q * b
+        s3 = s1 - q * s2
+        t3 = t1 - q * t2
 
-def multinv(e, phi):   
-   #Get the gcd and the second Bezout coefficient (t)
-   #from the Extended Euclidean Algorithm. (We don't need s)
-   my_gcd, _, t = gcd_extended(phi, e)
-   
-   #It only has a multiplicative inverse if the gcd is 1
-   if(my_gcd == 1):
-      return t % phi
-   else:
-      raise ValueError('{} has no multiplicative inverse modulo {}'.format(e, phi))
+        '''
+        The values for the next iteration, 
+        (but only if there is a next iteration)
+        '''
+        if (r > 0):
+            a = b
+            b = r
+            s1 = s2
+            s2 = s3
+            t1 = t2
+            t2 = t3
+
+    return abs(b), s2, t2
+
+
+def multinv(e, phi):
+    # Get the gcd and the second Bezout coefficient (t)
+    # from the Extended Euclidean Algorithm. (We don't need s)
+    my_gcd, _, t = gcd_extended(phi, e)
+
+    # It only has a multiplicative inverse if the gcd is 1
+    if (my_gcd == 1):
+        return t % phi
+    else:
+        raise ValueError('{} has no multiplicative inverse modulo {}'.format(e, phi))
